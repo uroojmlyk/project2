@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Forge — Create, Play & Share Fun Quizzes Online | Free Quiz Maker</title>
+<meta name="description" content="Quiz Forge is the cutest free online quiz maker. Create quizzes, play trivia games, challenge friends & track scores. Perfect for students, teachers & quiz lovers!">
+<meta name="keywords" content="quiz maker, create quiz online, free quiz platform, online trivia, fun quizzes, quiz for students, educational quiz, play quiz, quiz game, quiz builder">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --lavender:#EDE9FE;--lavender-mid:#C4B5FD;--lavender-deep:#7C3AED;
+  --peach:#FFF0E8;--peach-mid:#FDB897;--peach-deep:#F97316;
+  --mint:#E6FBF3;--mint-mid:#6EE7B7;--mint-deep:#059669;
+  --rose:#FFF0F5;--rose-mid:#FBCFE8;--rose-deep:#DB2777;
+  --lemon:#FEFCE8;--lemon-mid:#FDE68A;--lemon-deep:#D97706;
+  --sky:#EFF6FF;--sky-mid:#BFDBFE;--sky-deep:#2563EB;
+  --cream:#FDFCF7;--white:#fff;--ink:#1E1B4B;--muted:#6366F1;
+}
+
+body{
+  font-family:'Nunito',sans-serif;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, #EDE9FE 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 90% 10%, #FFF0F5 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, #E6FBF3 0%, transparent 55%),
+    radial-gradient(ellipse 55% 40% at 20% 90%, #FFF0E8 0%, transparent 60%),
+    #FDFCF7;
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:200;
+  padding:0 2.5rem;height:66px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:2px solid #EDE9FE;
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-bubble{
+  width:40px;height:40px;border-radius:14px;
+  background:#EDE9FE;border:2.5px solid #C4B5FD;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  animation:wobble 4s ease-in-out infinite;
+}
+.logo-text{font-family:'Fredoka One',cursive;font-size:1.55rem;color:#7C3AED}
+.logo-text em{color:#F97316;font-style:normal}
+.nav-pills{display:flex;gap:4px;align-items:center}
+.nav-pills a{
+  padding:7px 15px;border-radius:30px;font-size:13px;font-weight:800;
+  color:#6366F1;text-decoration:none;transition:all .2s;
+  border:2px solid transparent;
+}
+.nav-pills a:hover{background:#EDE9FE;border-color:#C4B5FD}
+.nav-start{
+  background:#7C3AED;color:#fff !important;padding:10px 20px;border-radius:30px;
+  font-size:13px;font-weight:900;text-decoration:none;
+  border:2.5px solid #6D28D9 !important;
+  transition:transform .2s;display:inline-flex;align-items:center;gap:6px;
+}
+.nav-start:hover{transform:translateY(-2px);background:#6D28D9 !important}
+
+/* HERO */
+.hero{
+  min-height:92vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:5rem 2rem 3rem;
+  position:relative;overflow:hidden;
+}
+
+/* Floating blobs */
+.blob{position:absolute;border-radius:50%;pointer-events:none;opacity:.55}
+.blob1{width:340px;height:340px;background:#EDE9FE;top:-80px;left:-80px;animation:blobFloat 8s ease-in-out infinite}
+.blob2{width:260px;height:260px;background:#FFF0F5;top:5%;right:-60px;animation:blobFloat 10s ease-in-out infinite .8s}
+.blob3{width:200px;height:200px;background:#E6FBF3;bottom:10%;left:5%;animation:blobFloat 9s ease-in-out infinite 1.4s}
+.blob4{width:180px;height:180px;background:#FFF0E8;bottom:5%;right:5%;animation:blobFloat 7s ease-in-out infinite .5s}
+.blob5{width:120px;height:120px;background:#FEFCE8;top:40%;left:2%;animation:blobFloat 11s ease-in-out infinite 2s}
+
+/* Floating doodles */
+.doodle{position:absolute;font-size:1.8rem;pointer-events:none;animation:spinFloat 6s ease-in-out infinite}
+.d1{top:12%;left:8%;animation-delay:0s}
+.d2{top:18%;right:9%;animation-delay:.7s}
+.d3{top:60%;left:4%;animation-delay:1.2s}
+.d4{bottom:18%;right:7%;animation-delay:.4s}
+.d5{top:35%;right:3%;animation-delay:1.8s;font-size:1.3rem}
+.d6{bottom:30%;left:8%;animation-delay:2.2s;font-size:1.2rem}
+
+/* Sparkle dots */
+.spark{position:absolute;border-radius:50%;pointer-events:none}
+.sp1{width:10px;height:10px;background:#FDE68A;top:25%;left:18%;animation:twinkle 2.5s ease-in-out infinite}
+.sp2{width:7px;height:7px;background:#FBCFE8;top:32%;right:20%;animation:twinkle 3s ease-in-out infinite .5s}
+.sp3{width:9px;height:9px;background:#6EE7B7;bottom:28%;left:16%;animation:twinkle 3.5s ease-in-out infinite 1s}
+.sp4{width:6px;height:6px;background:#C4B5FD;bottom:22%;right:18%;animation:twinkle 2.8s ease-in-out infinite .3s}
+.sp5{width:8px;height:8px;background:#FDB897;top:55%;left:12%;animation:twinkle 4s ease-in-out infinite 1.5s}
+
+/* Badge */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff;border:2.5px solid #C4B5FD;
+  padding:8px 18px;border-radius:40px;
+  font-size:12px;font-weight:900;color:#7C3AED;
+  margin-bottom:1.8rem;position:relative;z-index:2;
+  animation:popIn .6s .1s cubic-bezier(.34,1.56,.64,1) both;
+}
+.badge-dot{width:8px;height:8px;border-radius:50%;background:#6EE7B7;animation:pulse 2s infinite;display:inline-block}
+
+/* Headline */
+h1.hero-h{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(3rem,7vw,5.2rem);
+  line-height:1.08;margin-bottom:1.2rem;
+  position:relative;z-index:2;
+  animation:popIn .7s .2s cubic-bezier(.34,1.56,.64,1) both;
+}
+.hl-purple{
+  color:#7C3AED;position:relative;display:inline-block;
+}
+.hl-purple::before{
+  content:'';position:absolute;
+  bottom:2px;left:-4px;right:-4px;height:14px;
+  background:#EDE9FE;border-radius:4px;z-index:-1;
+  transform:rotate(-1deg);
+}
+.hl-coral{
+  color:#F97316;position:relative;display:inline-block;
+}
+.hl-coral::before{
+  content:'';position:absolute;
+  bottom:2px;left:-4px;right:-4px;height:14px;
+  background:#FFF0E8;border-radius:4px;z-index:-1;
+  transform:rotate(.8deg);
+}
+.hl-mint{
+  color:#059669;position:relative;display:inline-block;
+}
+.hl-mint::before{
+  content:'';position:absolute;
+  bottom:2px;left:-4px;right:-4px;height:14px;
+  background:#E6FBF3;border-radius:4px;z-index:-1;
+  transform:rotate(-.5deg);
+}
+
+.hero-sub{
+  font-size:1.1rem;color:#6366F1;font-weight:700;
+  max-width:500px;margin:0 auto 2.5rem;line-height:1.7;
+  position:relative;z-index:2;
+  animation:popIn .7s .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+/* CTA buttons */
+.hero-btns{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:3rem;position:relative;z-index:2;
+  animation:popIn .7s .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.btn{
+  padding:14px 26px;border-radius:50px;font-size:14px;font-weight:900;
+  text-decoration:none;cursor:pointer;border:none;
+  display:inline-flex;align-items:center;gap:7px;transition:transform .2s;
+  font-family:'Nunito',sans-serif;
+}
+.btn:hover{transform:translateY(-3px) scale(1.03)}
+.btn-primary{background:#7C3AED;color:#fff;border:3px solid #6D28D9}
+.btn-peach{background:#F97316;color:#fff;border:3px solid #EA6C0A}
+.btn-ghost{background:#fff;color:#7C3AED;border:3px solid #C4B5FD}
+
+/* MASCOTS */
+.mascot-stage{
+  display:flex;align-items:flex-end;justify-content:center;gap:1.5rem;
+  position:relative;z-index:2;
+  animation:popIn .9s .65s cubic-bezier(.34,1.56,.64,1) both;
+}
+.mascot-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
+.speech{
+  background:#fff;border:2.5px solid #C4B5FD;border-radius:18px 18px 18px 4px;
+  padding:8px 14px;font-size:11.5px;font-weight:900;color:#7C3AED;
+  white-space:nowrap;margin-bottom:8px;
+}
+.speech.right{border-radius:18px 18px 4px 18px;border-color:#FDB897;color:#C2410C}
+.speech.green{border-radius:18px 18px 18px 4px;border-color:#6EE7B7;color:#065F46}
+
+/* STATS */
+.stats-bar{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  padding:1.5rem 2rem 0;position:relative;z-index:2;
+  animation:popIn .8s .8s cubic-bezier(.34,1.56,.64,1) both;
+}
+.stat-card{
+  background:#fff;border-radius:20px;padding:14px 22px;text-align:center;
+  border:2.5px solid #EDE9FE;min-width:100px;
+}
+.stat-val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:#7C3AED;display:block}
+.stat-lbl{font-size:10.5px;font-weight:900;color:#A5B4FC;text-transform:uppercase;letter-spacing:.5px}
+
+/* SECTIONS */
+.section{padding:5.5rem 2rem;position:relative}
+.sec-inner{max-width:1020px;margin:0 auto}
+.sec-center{text-align:center}
+.sec-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 16px;border-radius:30px;font-size:11.5px;font-weight:900;
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:1rem;
+}
+.tag-purple{background:#EDE9FE;color:#6D28D9;border:2px solid #C4B5FD}
+.tag-peach{background:#FFF0E8;color:#C2410C;border:2px solid #FDB897}
+.tag-mint{background:#E6FBF3;color:#065F46;border:2px solid #6EE7B7}
+.tag-rose{background:#FFF0F5;color:#9D174D;border:2px solid #FBCFE8}
+.tag-lemon{background:#FEFCE8;color:#92400E;border:2px solid #FDE68A}
+.sec-h{font-family:'Fredoka One',cursive;font-size:clamp(1.9rem,4vw,2.9rem);color:#1E1B4B;line-height:1.15;margin-bottom:.8rem}
+.sec-sub{font-size:15px;color:#6366F1;font-weight:700;max-width:500px;margin:0 auto;line-height:1.7}
+
+/* FEATURES */
+.feat-bg{background:linear-gradient(160deg,#EDE9FE 0%,#FFF0F5 50%,#E6FBF3 100%)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:2.8rem}
+.f-card{
+  border-radius:28px;padding:26px 24px;
+  border:2.5px solid transparent;
+  transition:transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;cursor:default;
+  background:#fff;
+}
+.f-card:hover{transform:translateY(-7px);box-shadow:0 20px 40px rgba(0,0,0,.08)}
+.f-card.lav{border-color:#C4B5FD}
+.f-card.pch{border-color:#FDB897}
+.f-card.mnt{border-color:#6EE7B7}
+.f-card.sky{border-color:#BFDBFE}
+.f-card.ros{border-color:#FBCFE8}
+.f-card.lem{border-color:#FDE68A}
+
+.f-icon-wrap{
+  width:52px;height:52px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;margin-bottom:16px;
+  animation:iconWobble 3s ease-in-out infinite;
+}
+.f-card.lav .f-icon-wrap{background:#EDE9FE;animation-delay:0s}
+.f-card.pch .f-icon-wrap{background:#FFF0E8;animation-delay:.4s}
+.f-card.mnt .f-icon-wrap{background:#E6FBF3;animation-delay:.8s}
+.f-card.sky .f-icon-wrap{background:#EFF6FF;animation-delay:1.2s}
+.f-card.ros .f-icon-wrap{background:#FFF0F5;animation-delay:.2s}
+.f-card.lem .f-icon-wrap{background:#FEFCE8;animation-delay:.6s}
+
+.f-title{font-family:'Fredoka One',cursive;font-size:1.08rem;color:#1E1B4B;margin-bottom:6px}
+.f-desc{font-size:13.5px;color:#6366F1;font-weight:700;line-height:1.65}
+
+.f-pill{
+  display:inline-block;margin-top:12px;
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:900;
+}
+.f-card.lav .f-pill{background:#EDE9FE;color:#6D28D9}
+.f-card.pch .f-pill{background:#FFF0E8;color:#C2410C}
+.f-card.mnt .f-pill{background:#E6FBF3;color:#065F46}
+.f-card.sky .f-pill{background:#EFF6FF;color:#1D4ED8}
+.f-card.ros .f-pill{background:#FFF0F5;color:#9D174D}
+.f-card.lem .f-pill{background:#FEFCE8;color:#92400E}
+
+/* HOW IT WORKS */
+.how-bg{background:#fff}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.5rem;margin-top:2.8rem}
+.step-card{
+  border-radius:28px;padding:28px 22px;text-align:center;
+  border:2.5px solid #EDE9FE;
+  position:relative;transition:transform .2s;
+}
+.step-card:hover{transform:translateY(-5px)}
+.step-card:nth-child(1){background:#EDE9FE;border-color:#C4B5FD}
+.step-card:nth-child(2){background:#FFF0E8;border-color:#FDB897}
+.step-card:nth-child(3){background:#E6FBF3;border-color:#6EE7B7}
+.step-card:nth-child(4){background:#FFF0F5;border-color:#FBCFE8}
+.step-num{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:1.3rem;
+  margin:0 auto 14px;color:#fff;
+}
+.step-card:nth-child(1) .step-num{background:#7C3AED}
+.step-card:nth-child(2) .step-num{background:#F97316}
+.step-card:nth-child(3) .step-num{background:#059669}
+.step-card:nth-child(4) .step-num{background:#DB2777}
+.step-emoji{font-size:2rem;display:block;margin-bottom:10px;animation:bounce 2.5s ease-in-out infinite}
+.step-card:nth-child(2) .step-emoji{animation-delay:.4s}
+.step-card:nth-child(3) .step-emoji{animation-delay:.8s}
+.step-card:nth-child(4) .step-emoji{animation-delay:1.2s}
+.step-title{font-family:'Fredoka One',cursive;font-size:1.05rem;color:#1E1B4B;margin-bottom:7px}
+.step-desc{font-size:13px;color:#6366F1;font-weight:700;line-height:1.6}
+
+/* DEMO */
+.demo-bg{background:linear-gradient(160deg,#FFF0E8,#EDE9FE)}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.8rem;align-items:center}
+@media(max-width:640px){.demo-grid{grid-template-columns:1fr}}
+.quiz-card{background:#fff;border-radius:28px;padding:26px;border:2.5px solid #C4B5FD}
+.qz-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:2px dashed #EDE9FE;margin-bottom:16px}
+.qz-badge{background:#EDE9FE;color:#6D28D9;font-size:11px;font-weight:900;padding:5px 12px;border-radius:20px}
+.qz-timer{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:900;color:#F97316}
+.prog-bar{height:8px;border-radius:10px;background:#EDE9FE;margin-bottom:14px;overflow:hidden}
+.prog-fill{height:100%;width:30%;background:#7C3AED;border-radius:10px}
+.qz-q{font-size:14px;font-weight:900;color:#1E1B4B;margin-bottom:14px;line-height:1.5}
+.opt{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:16px;margin-bottom:9px;
+  border:2.5px solid #EDE9FE;cursor:pointer;
+  font-size:13px;font-weight:800;transition:all .2s;color:#1E1B4B;
+}
+.opt:hover{border-color:#C4B5FD;background:#EDE9FE}
+.opt.correct{background:#E6FBF3;border-color:#6EE7B7;color:#065F46}
+.opt.wrong{background:#FFF0F5;border-color:#FBCFE8;color:#9D174D;text-decoration:line-through;opacity:.7}
+.opt-ltr{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;flex-shrink:0;
+}
+.opt.correct .opt-ltr{background:#6EE7B7;color:#065F46}
+.opt.wrong .opt-ltr{background:#FBCFE8;color:#9D174D}
+.opt:not(.correct):not(.wrong) .opt-ltr{background:#EDE9FE;color:#7C3AED}
+
+.score-panel{background:#7C3AED;border-radius:28px;padding:28px;text-align:center;color:#fff}
+.score-emoji{font-size:3.5rem;display:block;animation:bounce 1.2s ease-in-out infinite;margin-bottom:10px}
+.score-num{font-family:'Fredoka One',cursive;font-size:4rem;line-height:1;margin-bottom:6px}
+.score-sub{font-size:13px;font-weight:800;opacity:.75;margin-bottom:18px}
+.chip-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.chip{background:rgba(255,255,255,.15);border-radius:20px;padding:6px 12px;font-size:11.5px;font-weight:900;border:1.5px solid rgba(255,255,255,.25)}
+.podium{background:rgba(255,255,255,.1);border-radius:16px;padding:14px;border:1.5px solid rgba(255,255,255,.2)}
+.pod-title{font-size:11px;font-weight:900;opacity:.75;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.pod-row{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:800;padding:4px 0}
+.pod-row+.pod-row{border-top:1px solid rgba(255,255,255,.1);padding-top:6px;margin-top:4px}
+
+/* CATEGORIES */
+.cats-bg{background:linear-gradient(160deg,#E6FBF3,#FFF0F5)}
+.cat-cloud{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:2.5rem;max-width:680px;margin-left:auto;margin-right:auto}
+.cat-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:11px 18px;border-radius:40px;
+  font-size:13.5px;font-weight:900;cursor:pointer;
+  text-decoration:none;transition:transform .2s;
+  border:2.5px solid transparent;
+}
+.cat-pill:hover{transform:translateY(-3px) scale(1.05)}
+.cat-pill.lav{background:#EDE9FE;border-color:#C4B5FD;color:#6D28D9}
+.cat-pill.pch{background:#FFF0E8;border-color:#FDB897;color:#C2410C}
+.cat-pill.mnt{background:#E6FBF3;border-color:#6EE7B7;color:#065F46}
+.cat-pill.ros{background:#FFF0F5;border-color:#FBCFE8;color:#9D174D}
+.cat-pill.lem{background:#FEFCE8;border-color:#FDE68A;color:#92400E}
+.cat-pill.sky{background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}
+.cat-emoji{font-size:16px}
+
+/* TESTIMONIALS */
+.testi-bg{background:#fff}
+.t-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:2.8rem}
+.t-card{border-radius:24px;padding:24px;border:2.5px solid transparent;position:relative}
+.t-card:nth-child(1){background:#EDE9FE;border-color:#C4B5FD}
+.t-card:nth-child(2){background:#FFF0E8;border-color:#FDB897}
+.t-card:nth-child(3){background:#E6FBF3;border-color:#6EE7B7}
+.t-stars{font-size:14px;letter-spacing:2px;margin-bottom:10px}
+.t-card:nth-child(1) .t-stars{color:#7C3AED}
+.t-card:nth-child(2) .t-stars{color:#F97316}
+.t-card:nth-child(3) .t-stars{color:#059669}
+.t-q{font-size:13.5px;font-weight:700;color:#1E1B4B;line-height:1.65;margin-bottom:16px;font-style:italic}
+.t-user{display:flex;align-items:center;gap:10px}
+.t-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.t-card:nth-child(1) .t-av{background:#C4B5FD}
+.t-card:nth-child(2) .t-av{background:#FDB897}
+.t-card:nth-child(3) .t-av{background:#6EE7B7}
+.t-name{font-size:13px;font-weight:900;color:#1E1B4B}
+.t-role{font-size:11px;font-weight:700;color:#6366F1}
+.t-score{position:absolute;top:18px;right:18px;font-family:'Fredoka One',cursive;font-size:1.05rem}
+.t-card:nth-child(1) .t-score{color:#7C3AED}
+.t-card:nth-child(2) .t-score{color:#F97316}
+.t-card:nth-child(3) .t-score{color:#059669}
+
+/* CTA */
+.cta-section{
+  background:linear-gradient(135deg,#7C3AED 0%,#DB2777 60%,#F97316 100%);
+  padding:6rem 2rem;text-align:center;position:relative;overflow:hidden;
+}
+.cta-blob1{position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.07);top:-80px;left:-60px}
+.cta-blob2{position:absolute;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,.06);bottom:-60px;right:-40px}
+.cta-h{font-family:'Fredoka One',cursive;font-size:clamp(2.2rem,5vw,3.6rem);color:#fff;margin-bottom:1rem;position:relative;z-index:2}
+.cta-sub{font-size:16px;color:rgba(255,255,255,.85);font-weight:700;max-width:420px;margin:0 auto 2.5rem;line-height:1.7;position:relative;z-index:2}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+.btn-cw{background:#fff;color:#7C3AED;padding:15px 32px;border-radius:50px;font-size:15px;font-weight:900;text-decoration:none;border:3px solid rgba(255,255,255,.3);transition:transform .2s;display:inline-flex;align-items:center;gap:8px;font-family:'Nunito',sans-serif}
+.btn-cw:hover{transform:translateY(-3px)}
+.btn-co{background:rgba(255,255,255,.15);color:#fff;padding:15px 32px;border-radius:50px;font-size:15px;font-weight:900;text-decoration:none;border:3px solid rgba(255,255,255,.4);transition:transform .2s;display:inline-flex;align-items:center;gap:8px;font-family:'Nunito',sans-serif}
+.btn-co:hover{background:rgba(255,255,255,.25);transform:translateY(-3px)}
+.cta-perks{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:2rem;position:relative;z-index:2}
+.cta-perk{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:rgba(255,255,255,.8)}
+.perk-dot{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:10px}
+
+/* FOOTER */
+footer{background:#1E1B4B;padding:3rem 2rem 2rem;text-align:center}
+.foot-logo{font-family:'Fredoka One',cursive;font-size:1.7rem;color:#fff;margin-bottom:.5rem}
+.foot-logo em{color:#C4B5FD;font-style:normal}
+.foot-p{font-size:13px;color:rgba(255,255,255,.45);font-weight:700;margin-bottom:1.5rem}
+.foot-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.foot-links a{color:rgba(255,255,255,.45);font-size:13px;font-weight:800;text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:#C4B5FD}
+.foot-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:1.2rem}
+.foot-tag{font-size:11px;font-weight:900;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.4px}
+.foot-copy{font-size:12px;color:rgba(255,255,255,.25);font-weight:700}
+
+/* ANIMATIONS */
+@keyframes popIn{from{opacity:0;transform:scale(.8) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(15px,-12px) scale(1.04)}66%{transform:translate(-10px,8px) scale(.97)}}
+@keyframes spinFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-14px) rotate(8deg)}}
+@keyframes twinkle{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.8);opacity:1}}
+@keyframes wobble{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes iconWobble{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.08) rotate(3deg)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
+@keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-bubble">🎮</div>
+    <div class="logo-text">Quiz<em>Forge</em></div>
+  </a>
+  <div class="nav-pills">
+    <a href="#features">Features</a>
+    <a href="#how">How it Works</a>
+    <a href="#topics">Topics</a>
+    <a href="#" class="nav-start">Start Free 🚀</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+  <div class="blob blob5"></div>
+  <div class="doodle d1">⭐</div>
+  <div class="doodle d2">✏️</div>
+  <div class="doodle d3">📚</div>
+  <div class="doodle d4">🏆</div>
+  <div class="doodle d5">💡</div>
+  <div class="doodle d6">🎯</div>
+  <div class="spark sp1"></div>
+  <div class="spark sp2"></div>
+  <div class="spark sp3"></div>
+  <div class="spark sp4"></div>
+  <div class="spark sp5"></div>
+
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    ✨ AI Quiz Generator is Live — Try it Free!
+  </div>
+
+  <h1 class="hero-h">
+    Make Quizzes that are<br>
+    <span class="hl-purple">Actually</span>
+    <span class="hl-coral"> Super</span>
+    <span class="hl-mint"> Fun!</span>
+  </h1>
+
+  <p class="hero-sub">
+    Quiz Forge is where teachers create magic, students discover joy, and everyone learns more. Build your first quiz in 2 minutes — completely free! 🎉
+  </p>
+
+  <div class="hero-btns">
+    <a href="/signup" class="btn btn-primary">🚀 Create Free Quiz</a>
+    <a href="/play" class="btn btn-peach">🎮 Play Now</a>
+    <a href="/explore" class="btn btn-ghost">🔍 Explore Topics</a>
+  </div>
+
+  <!-- MASCOTS (SVG Cartoon Characters) -->
+  <div class="mascot-stage">
+    <!-- Mascot 1: Teacher with Book -->
+    <div class="mascot-wrap" style="animation:mascotFloat 5s ease-in-out infinite">
+      <div class="speech">Let's learn! 🧠</div>
+      <svg width="88" height="108" viewBox="0 0 88 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="44" cy="76" rx="27" ry="28" fill="#C4B5FD"/>
+        <ellipse cx="44" cy="76" rx="20" ry="22" fill="#A78BFA" opacity=".4"/>
+        <circle cx="44" cy="36" r="27" fill="#FFE4C4"/>
+        <rect x="20" y="16" width="48" height="10" rx="5" fill="#1E1B4B"/>
+        <polygon points="44,4 60,16 28,16" fill="#1E1B4B"/>
+        <line x1="60" y1="16" x2="65" y2="26" stroke="#FDE68A" stroke-width="2.5"/>
+        <circle cx="65" cy="28" r="3.5" fill="#FDE68A"/>
+        <circle cx="37" cy="35" r="5" fill="#fff"/>
+        <circle cx="51" cy="35" r="5" fill="#fff"/>
+        <circle cx="38.5" cy="35.5" r="3" fill="#1E1B4B"/>
+        <circle cx="52.5" cy="35.5" r="3" fill="#1E1B4B"/>
+        <circle cx="39.5" cy="34.5" r="1" fill="#fff"/>
+        <circle cx="53.5" cy="34.5" r="1" fill="#fff"/>
+        <path d="M37 45 Q44 52 51 45" stroke="#E07B3A" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <circle cx="32" cy="41" r="5" fill="#FBCFE8" opacity=".6"/>
+        <circle cx="56" cy="41" r="5" fill="#FBCFE8" opacity=".6"/>
+        <rect x="58" y="64" width="16" height="20" rx="3" fill="#60A5FA"/>
+        <rect x="59" y="65" width="7" height="18" rx="2" fill="#93C5FD"/>
+        <line x1="63" y1="69" x2="73" y2="69" stroke="#fff" stroke-width="1.2" opacity=".7"/>
+        <line x1="63" y1="73" x2="73" y2="73" stroke="#fff" stroke-width="1.2" opacity=".7"/>
+        <line x1="63" y1="77" x2="73" y2="77" stroke="#fff" stroke-width="1.2" opacity=".7"/>
+        <ellipse cx="17" cy="78" rx="7" ry="13" fill="#C4B5FD" transform="rotate(-12,17,78)"/>
+      </svg>
+    </div>
+
+    <!-- Mascot 2: Graduate (center, bigger) -->
+    <div class="mascot-wrap" style="animation:mascotFloat 6s ease-in-out infinite .7s;margin-top:-24px">
+      <div class="speech green">Score 100%! 🌟</div>
+      <svg width="108" height="128" viewBox="0 0 108 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="54" cy="90" rx="33" ry="32" fill="#6EE7B7"/>
+        <ellipse cx="54" cy="90" rx="24" ry="24" fill="#34D399" opacity=".35"/>
+        <circle cx="54" cy="46" r="31" fill="#FFE4C4"/>
+        <path d="M30 28 L33 14 L38 26 L43 11 L47 24 L52 9 L56 23 L61 11 L65 25 L70 14 L73 28" stroke="#D97706" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <circle cx="45" cy="44" r="5.5" fill="#fff"/>
+        <circle cx="63" cy="44" r="5.5" fill="#fff"/>
+        <circle cx="46.5" cy="44.5" r="3.5" fill="#1E1B4B"/>
+        <circle cx="64.5" cy="44.5" r="3.5" fill="#1E1B4B"/>
+        <circle cx="47.5" cy="43.5" r="1.2" fill="#fff"/>
+        <circle cx="65.5" cy="43.5" r="1.2" fill="#fff"/>
+        <path d="M43 57 Q54 66 65 57" stroke="#E07B3A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <circle cx="39" cy="52" r="5.5" fill="#FBCFE8" opacity=".6"/>
+        <circle cx="69" cy="52" r="5.5" fill="#FBCFE8" opacity=".6"/>
+        <ellipse cx="19" cy="92" rx="8" ry="14" fill="#6EE7B7" transform="rotate(-10,19,92)"/>
+        <ellipse cx="89" cy="92" rx="8" ry="14" fill="#6EE7B7" transform="rotate(10,89,92)"/>
+      </svg>
+    </div>
+
+    <!-- Mascot 3: Determined student with pencil -->
+    <div class="mascot-wrap" style="animation:mascotFloat 5.5s ease-in-out infinite .3s">
+      <div class="speech right">I got this! 💪</div>
+      <svg width="88" height="108" viewBox="0 0 88 108" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="44" cy="76" rx="27" ry="28" fill="#FDB897"/>
+        <ellipse cx="44" cy="76" rx="20" ry="20" fill="#FB923C" opacity=".3"/>
+        <circle cx="44" cy="36" r="26" fill="#FFE4C4"/>
+        <path d="M24 24 L27 11 L32 22 L37 8 L41 20 L47 7 L51 20 L57 8 L62 22 L66 11 L68 24" stroke="#92400E" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <circle cx="37" cy="34" r="5" fill="#fff"/>
+        <circle cx="51" cy="34" r="5" fill="#fff"/>
+        <circle cx="38.5" cy="34.5" r="3" fill="#1E1B4B"/>
+        <circle cx="52.5" cy="34.5" r="3" fill="#1E1B4B"/>
+        <circle cx="39.5" cy="33.5" r="1" fill="#fff"/>
+        <circle cx="53.5" cy="33.5" r="1" fill="#fff"/>
+        <path d="M34 28 Q37 25 40 27" stroke="#92400E" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <path d="M48 27 Q51 25 54 28" stroke="#92400E" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <path d="M35 44 Q44 52 53 44" stroke="#E07B3A" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <circle cx="31" cy="40" r="5" fill="#FBCFE8" opacity=".6"/>
+        <circle cx="57" cy="40" r="5" fill="#FBCFE8" opacity=".6"/>
+        <rect x="65" y="52" width="5" height="24" rx="2.5" fill="#FDE68A" transform="rotate(-20,67,64)"/>
+        <polygon points="60,73 65,70 63,80" fill="#FFE4C4"/>
+        <rect x="65" y="52" width="5" height="5" rx="1.5" fill="#FBCFE8" transform="rotate(-20,67,54)"/>
+        <ellipse cx="14" cy="78" rx="7" ry="12" fill="#FDB897" transform="rotate(15,14,78)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card"><span class="stat-val">50K+</span><span class="stat-lbl">Quizzes Made</span></div>
+    <div class="stat-card"><span class="stat-val">2M+</span><span class="stat-lbl">Questions Answered</span></div>
+    <div class="stat-card"><span class="stat-val">99%</span><span class="stat-lbl">Happy Learners</span></div>
+    <div class="stat-card"><span class="stat-val">Free</span><span class="stat-lbl">Forever Plan</span></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section feat-bg" id="features">
+  <div class="sec-inner sec-center">
+    <div class="sec-tag tag-purple">✨ Platform Features</div>
+    <h2 class="sec-h">Everything you need to <span style="color:#7C3AED">quiz smarter</span></h2>
+    <p class="sec-sub">From AI magic to live leaderboards — Quiz Forge packs every tool teachers and students adore.</p>
+    <div class="feat-grid">
+      <div class="f-card lav">
+        <div class="f-icon-wrap">🤖</div>
+        <h3 class="f-title">AI Quiz Generator</h3>
+        <p class="f-desc">Type any topic, get a perfect quiz in seconds. Science, history, pop culture — anything!</p>
+        <span class="f-pill">Powered by AI ✨</span>
+      </div>
+      <div class="f-card pch">
+        <div class="f-icon-wrap">⚡</div>
+        <h3 class="f-title">Instant Grading</h3>
+        <p class="f-desc">Results appear the moment students submit. No waiting, no red pens, no paper piles!</p>
+        <span class="f-pill">Zero delay 🚀</span>
+      </div>
+      <div class="f-card mnt">
+        <div class="f-icon-wrap">📊</div>
+        <h3 class="f-title">Smart Analytics</h3>
+        <p class="f-desc">Per-question breakdowns reveal exactly where students shine and where they need help.</p>
+        <span class="f-pill">Data-driven 📈</span>
+      </div>
+      <div class="f-card ros">
+        <div class="f-icon-wrap">🏆</div>
+        <h3 class="f-title">Live Leaderboard</h3>
+        <p class="f-desc">Real-time classroom competition — every quiz feels like a game show. Students go wild!</p>
+        <span class="f-pill">Real-time 🎮</span>
+      </div>
+      <div class="f-card sky">
+        <div class="f-icon-wrap">🔗</div>
+        <h3 class="f-title">One-Click Sharing</h3>
+        <p class="f-desc">Share via link, QR code, or directly to Google Classroom. Done in one tap.</p>
+        <span class="f-pill">Super easy 🎯</span>
+      </div>
+      <div class="f-card lem">
+        <div class="f-icon-wrap">🛡️</div>
+        <h3 class="f-title">Anti-Cheat Mode</h3>
+        <p class="f-desc">Randomized questions, time limits, and one-attempt locks keep assessments honest.</p>
+        <span class="f-pill">100% fair ✅</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how-bg" id="how">
+  <div class="sec-inner sec-center">
+    <div class="sec-tag tag-peach">🗺️ How It Works</div>
+    <h2 class="sec-h">From idea to quiz in <span style="color:#F97316">3 minutes!</span></h2>
+    <p class="sec-sub">No tutorials. No setup. Sign up, create, share — and let the magic happen.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <span class="step-emoji">🎨</span>
+        <h4 class="step-title">Create Your Quiz</h4>
+        <p class="step-desc">Add questions by hand or let our AI generate them from any topic — instantly!</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <span class="step-emoji">🎯</span>
+        <h4 class="step-title">Set Your Rules</h4>
+        <p class="step-desc">Choose time limits, difficulty, passing score, and exactly who can see it.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <span class="step-emoji">📢</span>
+        <h4 class="step-title">Share It!</h4>
+        <p class="step-desc">Send a link, post a QR code, or push directly to your LMS in one click.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <span class="step-emoji">🥳</span>
+        <h4 class="step-title">Celebrate Results</h4>
+        <p class="step-desc">Watch live scores roll in and export beautiful reports for every student.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="section demo-bg">
+  <div class="sec-inner sec-center">
+    <div class="sec-tag tag-mint">🎮 See It In Action</div>
+    <h2 class="sec-h">This is what your <span style="color:#059669">students see!</span></h2>
+    <p class="sec-sub">Clean, fun, and impossible to get confused. The quiz experience they actually enjoy.</p>
+    <div class="demo-grid">
+      <div class="quiz-card">
+        <div class="qz-top">
+          <div class="qz-badge">🧬 Biology — Ch.4</div>
+          <div class="qz-timer">⏱️ 14:23</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:12px;font-weight:900;color:#6366F1">Question 3 of 10</span>
+          <span style="background:#EDE9FE;color:#6D28D9;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px">30 pts</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill"></div></div>
+        <p class="qz-q">🤔 Which organelle is known as the powerhouse of the cell?</p>
+        <div class="opt wrong"><span class="opt-ltr">A</span> Nucleus</div>
+        <div class="opt correct"><span class="opt-ltr">B</span> Mitochondria ✓</div>
+        <div class="opt"><span class="opt-ltr">C</span> Ribosome</div>
+        <div class="opt"><span class="opt-ltr">D</span> Golgi Apparatus</div>
+        <button class="btn btn-primary" style="width:100%;margin-top:14px;justify-content:center;font-size:13.5px;padding:12px 0;border-radius:16px">Next Question →</button>
+      </div>
+      <div class="score-panel">
+        <span class="score-emoji">🎉</span>
+        <div class="score-num">92%</div>
+        <div class="score-sub">Class Average Score</div>
+        <div class="chip-row">
+          <div class="chip">📈 Up from 78%</div>
+          <div class="chip">🏆 Best: 100%</div>
+          <div class="chip">✅ 28/30 correct</div>
+        </div>
+        <div class="podium">
+          <div class="pod-title">Top Scorers 🥇</div>
+          <div class="pod-row"><span>🥇 Sara K.</span><span>100%</span></div>
+          <div class="pod-row"><span>🥈 Ahmed R.</span><span>97%</span></div>
+          <div class="pod-row"><span>🥉 Fatima N.</span><span>95%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section cats-bg" id="topics">
+  <div class="sec-inner sec-center">
+    <div class="sec-tag tag-lemon">📚 Quiz Topics</div>
+    <h2 class="sec-h">Explore <span style="color:#D97706">500+ quiz</span> categories!</h2>
+    <p class="sec-sub">From rocket science to pop culture — every topic you can dream of lives here.</p>
+    <div class="cat-cloud">
+      <a class="cat-pill lav"><span class="cat-emoji">🔢</span> Mathematics</a>
+      <a class="cat-pill mnt"><span class="cat-emoji">🧬</span> Biology</a>
+      <a class="cat-pill pch"><span class="cat-emoji">⚗️</span> Chemistry</a>
+      <a class="cat-pill sky"><span class="cat-emoji">🌍</span> Geography</a>
+      <a class="cat-pill ros"><span class="cat-emoji">📖</span> English</a>
+      <a class="cat-pill lem"><span class="cat-emoji">🏛️</span> History</a>
+      <a class="cat-pill lav"><span class="cat-emoji">💻</span> Computer Science</a>
+      <a class="cat-pill ros"><span class="cat-emoji">🎵</span> Music</a>
+      <a class="cat-pill mnt"><span class="cat-emoji">🚀</span> Space</a>
+      <a class="cat-pill pch"><span class="cat-emoji">⚽</span> Sports</a>
+      <a class="cat-pill sky"><span class="cat-emoji">🎬</span> Movies</a>
+      <a class="cat-pill lem"><span class="cat-emoji">🐾</span> Animals</a>
+      <a class="cat-pill ros"><span class="cat-emoji">🍕</span> Food & Culture</a>
+      <a class="cat-pill lav"><span class="cat-emoji">🔭</span> Physics</a>
+      <a class="cat-pill mnt"><span class="cat-emoji">🎨</span> Art</a>
+      <a class="cat-pill pch" style="border-style:dashed"><span class="cat-emoji">➕</span> 500+ More Topics</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testi-bg">
+  <div class="sec-inner sec-center">
+    <div class="sec-tag tag-rose">💬 Real Stories</div>
+    <h2 class="sec-h">Teachers & students <span style="color:#DB2777">love Quiz Forge!</span> 🥰</h2>
+    <p class="sec-sub">Real people, real classrooms, real results — hear what they have to say.</p>
+    <div class="t-grid">
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-q">"I used to spend 3 hours marking papers. Now Quiz Forge does it instantly. I actually have evenings free now!"</p>
+        <div class="t-user">
+          <div class="t-av">👩‍🏫</div>
+          <div>
+            <div class="t-name">Sara Malik</div>
+            <div class="t-role">Biology Teacher, Lahore</div>
+          </div>
+        </div>
+        <div class="t-score">88% avg</div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-q">"My students literally compete to get the highest score. Engagement went from 40% to 95% in one week!"</p>
+        <div class="t-user">
+          <div class="t-av">👨‍💻</div>
+          <div>
+            <div class="t-name">Ahmed Raza</div>
+            <div class="t-role">CS Lecturer, University</div>
+          </div>
+        </div>
+        <div class="t-score">91% avg</div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-q">"The AI generator is unreal! I typed 'Algebra grade 8' and got a perfect 15-question quiz in 10 seconds!"</p>
+        <div class="t-user">
+          <div class="t-av">👩‍🎓</div>
+          <div>
+            <div class="t-name">Fatima Noor</div>
+            <div class="t-role">Online Math Tutor</div>
+          </div>
+        </div>
+        <div class="t-score">95% avg</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-blob1"></div>
+  <div class="cta-blob2"></div>
+  <div style="font-size:3.5rem;margin-bottom:1rem">🎉</div>
+  <h2 class="cta-h">Ready to make quizzing <em style="font-style:normal;color:#FDE68A">magical?</em></h2>
+  <p class="cta-sub">Join 50,000+ educators already using Quiz Forge. Free forever — no credit card, no limits on fun!</p>
+  <div class="cta-btns">
+    <a href="/signup" class="btn-cw">🚀 Create Free Account</a>
+    <a href="/play" class="btn-co">🎮 Play a Sample Quiz</a>
+  </div>
+  <div class="cta-perks">
+    <div class="cta-perk"><div class="perk-dot">✓</div> Free forever plan</div>
+    <div class="cta-perk"><div class="perk-dot">✓</div> No credit card needed</div>
+    <div class="cta-perk"><div class="perk-dot">✓</div> Unlimited quizzes</div>
+    <div class="cta-perk"><div class="perk-dot">✓</div> Instant AI generation</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">Quiz<em>Forge</em> 🎮</div>
+  <p class="foot-p">The free online quiz maker for teachers, students & trivia lovers everywhere</p>
+  <div class="foot-tags">
+    <span class="foot-tag">Online Quiz Maker</span><span class="foot-tag">•</span>
+    <span class="foot-tag">Free Quiz Creator</span><span class="foot-tag">•</span>
+    <span class="foot-tag">Educational Quizzes</span><span class="foot-tag">•</span>
+    <span class="foot-tag">Trivia Games</span><span class="foot-tag">•</span>
+    <span class="foot-tag">Quiz for Students</span>
+  </div>
+  <div class="foot-links">
+    <a href="#">Features</a>
+    <a href="#">How It Works</a>
+    <a href="#">For Teachers</a>
+    <a href="#">For Students</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+  <p class="foot-copy">© 2025 Quiz Forge. Made with 💜 for curious minds everywhere.</p>
+</footer>
+
+</body>
+</html>
